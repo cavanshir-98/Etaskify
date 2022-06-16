@@ -27,7 +27,7 @@ public class OrganizationController {
     }
 
 
-    @DeleteMapping("/user/{organizationId}")
+    @DeleteMapping("/organization/{organizationId}")
     public ResponseEntity<Void> deleteOrganizationUser(@PathVariable Long organizationId,
                                                        @RequestBody @Valid AddUserToOrgDto registerOrganizationUser) {
         log.trace("Delete OrganizationUser {},{}  request", organizationId, registerOrganizationUser);
@@ -35,7 +35,7 @@ public class OrganizationController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PostMapping("/user/{organizationId}")
+    @PostMapping("/organization/{organizationId}")
     public ResponseEntity<Void> addOrganizationUsers(@PathVariable Long organizationId,
                                                      @RequestBody @Valid AddUserToOrgDto registerOrganizationUser) {
         log.trace("Add GroupUser  {},{}  request", organizationId, registerOrganizationUser);

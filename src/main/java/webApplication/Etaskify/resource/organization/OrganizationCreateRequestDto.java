@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class OrganizationCreateRequestDto {
 
+
     @NotNull
     @NotBlank
     private String name;

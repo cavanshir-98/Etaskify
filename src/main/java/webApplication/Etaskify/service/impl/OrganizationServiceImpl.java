@@ -1,6 +1,7 @@
 package webApplication.Etaskify.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,19 +34,21 @@ public class OrganizationServiceImpl implements OrganizationService {
     public OrganizationResponseInfoDto create(OrganizationCreateRequestDto requestDto) {
         organizationRepository.findByName(requestDto.getName())
                 .ifPresent(organization -> {
-                    throw new RuntimeException(requestDto.getName());
+                    throw new OrganizationAlreadyExistException();
                 });
 
-        Organization organization = organizationMapper.requestToOrganization(requestDto);
-        return organizationMapper.organizationToDto(organizationRepository.save(organization));
+        Organization organization = new Organization();
+        organization.setName(requestDto.getName());
+        organizationRepository.save(organization);
+        return organizationMapper.organizationToDto(organization);
     }
 
     @Override
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void addUserToOrganization(AddUserToOrgDto registerOrgUser, Long id) {
         Organization organization = organizationFindById(id);
-        User user = userFindById(registerOrgUser.getUserId());
         checkUserIsAlreadyInTheOrg(organization, registerOrgUser.getUserId());
+        User user = userFindById(registerOrgUser.getUserId());
         List<User> users = organization.getUser();
         users.add(user);
         organization.setUser(users);
@@ -61,7 +64,6 @@ public class OrganizationServiceImpl implements OrganizationService {
         organization.setUser(users);
     }
 
-
     private Organization organizationFindById(Long id) {
         return organizationRepository.findById(id)
                 .orElseThrow(() -> new OrganizationNotFoundException(id));
@@ -69,7 +71,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     private User userFindById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     private void checkUserIsAlreadyInTheOrg(Organization organization, Long userId) {
@@ -77,7 +79,7 @@ public class OrganizationServiceImpl implements OrganizationService {
                 .filter(u -> u.getId() == userId)
                 .collect(Collectors.toSet());
         if (!test.isEmpty()) {
-            throw new OrganizationAlreadyExistException(userId);
+            throw new OrganizationAlreadyExistException();
         }
     }
 }
