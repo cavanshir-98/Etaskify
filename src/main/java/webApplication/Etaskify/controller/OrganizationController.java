@@ -2,12 +2,14 @@ package webApplication.Etaskify.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import webApplication.Etaskify.resource.organization.AddUserToOrgDto;
 import webApplication.Etaskify.resource.organization.OrganizationCreateRequestDto;
 import webApplication.Etaskify.resource.organization.OrganizationResponseInfoDto;
+import webApplication.Etaskify.resource.organization.OrganizationSearchRequest;
 import webApplication.Etaskify.service.OrganizationService;
 
 import javax.validation.Valid;
@@ -19,6 +21,11 @@ import javax.validation.Valid;
 public class OrganizationController {
 
     private final OrganizationService organizationService;
+
+    @GetMapping
+    public Page<OrganizationResponseInfoDto> list( @RequestBody OrganizationSearchRequest searchRequest) {
+        return organizationService.list(searchRequest);
+    }
 
     @PostMapping
     public ResponseEntity<OrganizationResponseInfoDto> add(@RequestBody @Valid OrganizationCreateRequestDto requestDto) {

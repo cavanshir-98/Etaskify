@@ -1,5 +1,8 @@
 package webApplication.Etaskify.config;
 
+import org.modelmapper.Conditions;
+import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -17,18 +20,14 @@ public class AppConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
-//
-//        registry.addResourceHandler(ApplicationConstants.RESOURCE_URL_PROFILE_PICTURE + "**")
-//                .addResourceLocations("file:/// /C:\\Users/" + ApplicationConstants.FOLDER_USER_PHOTO);
     }
 
-//    @Bean
-//    public ModelMapper modelMapper() {
-//        ModelMapper modelMapper = new ModelMapper();
-//        //modelMapper.getConfiguration().setSkipNullEnabled(true);
-//        modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
-//        return modelMapper;
-//    }
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+        return modelMapper;
+    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -37,7 +36,5 @@ public class AppConfig implements WebMvcConfigurer {
                 .allowedMethods("*")
                 .allowedOrigins("*")
                 .allowedHeaders("*");
-
     }
-
 }

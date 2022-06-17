@@ -24,10 +24,6 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private final OrganizationRepository organizationRepository;
-
-
-
     @Override
     public void create(RegisterUserDto dto) {
         userRepository.findByEmail(dto.getEmail())
@@ -37,7 +33,6 @@ public class UserServiceImpl implements UserService {
         User user = createUserEntityObject(dto);
         userRepository.save(user);
     }
-
 
     private User createUserEntityObject(RegisterUserDto registerUserDto) {
 
@@ -51,10 +46,6 @@ public class UserServiceImpl implements UserService {
         user.setName(registerUserDto.getName());
         user.setEmail(registerUserDto.getEmail());
         user.setPhoneNumber(registerUserDto.getPhoneNumber());
-
-        Organization organization =new Organization();
-        organization.setId(registerUserDto.getOrganizationId());
-        organizationRepository.save(organization);
         return user;
     }
 

@@ -26,6 +26,4 @@ public class RegisterUserDto {
     private String password;
 
     private String phoneNumber;
-
-    private Long organizationId;
 }

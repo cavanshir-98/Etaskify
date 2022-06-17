@@ -25,6 +25,8 @@ dependencies {
 
 	implementation group: 'org.mapstruct',name: 'mapstruct',version: '1.4.2.Final'
 	annotationProcessor group: 'org.mapstruct',name: 'mapstruct-processor',version: '1.4.2.Final'
+	implementation("org.modelmapper:modelmapper:$modelmapperVersion")
+
 
 
 	implementation 'org.liquibase:liquibase-core'

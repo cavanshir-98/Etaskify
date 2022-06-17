@@ -1,6 +1,7 @@
 package webApplication.Etaskify.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -15,6 +16,7 @@ import webApplication.Etaskify.repository.UserRepository;
 import webApplication.Etaskify.resource.organization.AddUserToOrgDto;
 import webApplication.Etaskify.resource.organization.OrganizationCreateRequestDto;
 import webApplication.Etaskify.resource.organization.OrganizationResponseInfoDto;
+import webApplication.Etaskify.resource.organization.OrganizationSearchRequest;
 import webApplication.Etaskify.service.OrganizationService;
 
 import java.util.List;
@@ -62,6 +64,15 @@ public class OrganizationServiceImpl implements OrganizationService {
         List<User> users = organization.getUser();
         users.remove(user);
         organization.setUser(users);
+    }
+
+    @Override
+    public Page<OrganizationResponseInfoDto> list(OrganizationSearchRequest searchRequest) {
+        if (searchRequest.getOrder()==null){
+            searchRequest.setOrder("id");
+        }
+        Page<Organization> organizations = organizationRepository.findAll(searchRequest);
+        return organizations.map(OrganizationResponseInfoDto::getDto);
     }
 
     private Organization organizationFindById(Long id) {
